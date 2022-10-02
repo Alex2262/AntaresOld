@@ -157,7 +157,7 @@ OPP_ATK_INCREMENTS = np.array([
 ])
 
 
-@nb.njit   # with numba nps is increased by ~ 23
+@nb.njit(cache=True)   # with numba nps is increased by ~ 23
 def get_pseudo_legal_moves(board, castle, ep):
     moves = []
     for pos, piece in enumerate(board):
@@ -189,7 +189,7 @@ def get_pseudo_legal_moves(board, castle, ep):
     return moves
 
 
-@nb.njit  # with numba nps is increased by ~ 16
+@nb.njit(cache=True)  # with numba nps is increased by ~ 16
 def get_pseudo_legal_captures(board):
     moves = []
     for pos, piece in enumerate(board):
@@ -212,7 +212,7 @@ def get_pseudo_legal_captures(board):
     return moves
 
 
-@nb.njit  # with numba nps is increased by ~ 19
+@nb.njit(cache=True)  # with numba nps is increased by ~ 19
 def get_attacked_squares(board):
     squares = []
     for pos, piece in enumerate(board):
@@ -239,7 +239,7 @@ def get_attacked_squares(board):
 # create another function to get which pieces are defending which squares
 
 
-@nb.njit  # with numba nps is increased by ~ 21
+@nb.njit(cache=True)  # with numba nps is increased by ~ 21
 def get_pawn_attack_map(board):
     squares = []
     for pos, piece in enumerate(board):
@@ -254,7 +254,7 @@ def get_pawn_attack_map(board):
     return squares
 
 
-@nb.njit  # with numba nps is increased by ~ 72
+@nb.njit(cache=True)  # with numba nps is increased by ~ 72
 def get_attacked_pieces(board):
     squares = []
     for pos, piece in enumerate(board):
@@ -280,7 +280,7 @@ def get_attacked_pieces(board):
 # in combination, with numba, the above functions give around a 180 nps boost
 
 
-@nb.njit
+@nb.njit(cache=True)
 def in_check(board, pos):
     for piece in (4, 1):
         for increment in ATK_INCREMENTS[piece]:
@@ -326,7 +326,7 @@ def in_check(board, pos):
     return False
 
 
-@nb.njit(fastmath=True)
+@nb.njit(cache=True, fastmath=True)
 def get_ordered_pseudo_legal_moves(board, castle, ep):
     moves = get_pseudo_legal_moves(board, castle, ep)
     move_scores = np.zeros(len(moves))
@@ -350,7 +350,7 @@ def get_ordered_pseudo_legal_moves(board, castle, ep):
     return ordered_moves
 
 
-@nb.njit(fastmath=True)
+@nb.njit(cache=True, fastmath=True)
 def get_ordered_pseudo_legal_captures(board):
     moves = get_pseudo_legal_captures(board)
     move_scores = np.zeros(len(moves))
@@ -382,41 +382,45 @@ def test_for_win(board, move_amt):
     return 1
 
 
-@nb.njit(fastmath=True)  # without fastmath nps decrease. with fastmath maybe 1 nps boost
+@nb.njit(cache=True, fastmath=True)  # without fastmath nps decrease. with fastmath maybe 1 nps boost
 def heuristic(board):
-    self_score = 0
-    opp_score = 0
-    piece_vals = 0
 
-    for pos, piece in enumerate(board):
+    own_mid_score = 0
+    opp_mid_score = 0
+
+    own_end_score = 0
+    opp_end_score = 0
+
+    own_mid_piece_vals = 0
+    opp_mid_piece_vals = 0
+
+    for pos in range(21, 99):
+        piece = board[pos]
+        correspond_pos = (pos - 21) // 10 * 8 + (pos - 21) % 10
         if piece < 6:
-            piece_vals += PIECE_VALUES[piece]
+            own_mid_piece_vals += PIECE_VALUES[piece]
+
+            own_mid_score += PST[piece][correspond_pos]
+            own_end_score += ENDGAME_PST[piece][correspond_pos]
         elif piece < 12:
-            piece_vals += PIECE_VALUES[piece-6]
-    if piece_vals > 2600:  # opening or middle game
-        for pos, piece in enumerate(board):
-            correspond_pos = (pos-21)//10*8 + (pos-21) % 10
-            if piece < 6:  # own piece
-                self_score += PIECE_VALUES[piece]
-                self_score += PST[piece][correspond_pos]
-            elif piece < 12:  # opponent's piece
-                opp_score += PIECE_VALUES[piece-6]
-                opp_score += OPP_PST[piece-6][correspond_pos]
+            opp_mid_piece_vals += PIECE_VALUES[piece-6]
+
+            opp_mid_score += OPP_PST[piece-6][correspond_pos]
+            opp_end_score += OPP_ENDGAME_PST[piece-6][correspond_pos]
+
+    if own_mid_score + opp_mid_score > 2600:  # opening or middle game
+        own_score = own_mid_score + own_mid_piece_vals
+        opp_score = opp_mid_score + opp_mid_piece_vals
     else:  # end game
-        for pos, piece in enumerate(board):
-            correspond_pos = (pos-21)//10*8 + (pos-21) % 10
-            if piece < 6:  # own piece
-                self_score += PIECE_VALUES[piece]
-                self_score += ENDGAME_PST[piece][correspond_pos]
-            elif piece < 12:  # opponent's piece
-                opp_score += PIECE_VALUES[piece-6]
-                opp_score += OPP_ENDGAME_PST[piece-6][correspond_pos]
-    return self_score-opp_score
+        own_score = own_end_score + own_mid_piece_vals
+        opp_score = opp_end_score + opp_mid_piece_vals
+
+    return own_score-opp_score
 
 
-@nb.njit  # maybe a 1-5 nps boost with numba
+@nb.njit(cache=True)  # maybe a 1-5 nps boost with numba
 def rotate(board):
-    for i in range(120):
+    for i in range(21, 99):
         if board[i] < 6:  # own piece
             board[i] += 6
         elif board[i] < 12:  # opponent's piece
@@ -424,7 +428,7 @@ def rotate(board):
     return np.flip(board)
 
 
-@nb.njit
+@nb.njit(cache=True)
 def make_move(board, selected_piece, old_pos, new_pos, castle, opp_castle, ep):
 
     flag = True
@@ -482,7 +486,7 @@ def make_move(board, selected_piece, old_pos, new_pos, castle, opp_castle, ep):
     return -10
 
 
-@nb.njit
+@nb.njit(cache=True)
 def make_capture(board, selected_piece, old_pos, new_pos):
 
     flag = True
@@ -504,7 +508,7 @@ def make_capture(board, selected_piece, old_pos, new_pos):
     return 0
 
 
-@nb.njit
+@nb.njit(cache=True)
 def undo_move(board, selected_piece, old_pos, new_pos, occupied, ep):
 
     if selected_piece == 0:
@@ -523,13 +527,13 @@ def undo_move(board, selected_piece, old_pos, new_pos, occupied, ep):
     board[old_pos] = selected_piece
 
 
-@nb.njit
+@nb.njit(cache=True)
 def undo_capture(board, selected_piece, old_pos, new_pos, occupied):
     board[new_pos] = occupied
     board[old_pos] = selected_piece
 
 
-@nb.njit(fastmath=True)  # increases nps by like 10-15
+@nb.njit(cache=True, fastmath=True)  # increases nps by like 10-15
 def board_hash(board):
     code = ""
     for i in board:

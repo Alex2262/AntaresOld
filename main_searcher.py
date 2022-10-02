@@ -193,6 +193,11 @@ class Search:
         situation = 1
         in_check_bool = False
 
+        if depth == 0:
+            return [-1, -1], self.qsearch(board, alpha, beta, self.max_qdepth)
+
+        self.node_count += 1
+
         if hash_code in self.WIN_TABLE:  # kind of useless
             test_result = self.WIN_TABLE[hash_code]
             if test_result == 2:
@@ -205,11 +210,6 @@ class Search:
                 if piece == 5:  # if piece is king
                     k_pos = pos
             in_check_bool = in_check(board, k_pos)
-
-        if depth == 0:
-            return [-1, -1], self.qsearch(board, alpha, beta, self.max_qdepth)
-
-        self.node_count += 1
 
         if self.curr_depth > self.min_stop_depth and timeit.default_timer() - self.start_time >= self.max_time:
             return [-2, -2], 0
@@ -324,13 +324,14 @@ class Search:
 
 
 '''
-info depth 1 score cp 58 time 665 nodes 21 nps 31 pv g1f3
-info depth 2 score cp 0 time 668 nodes 60 nps 121 pv g1f3
-info depth 3 score cp 58 time 691 nodes 524 nps 874 pv g1f3
-info depth 4 score cp 0 time 861 nodes 1366 nps 2287 pv g1f3
-info depth 5 score cp 41 time 1227 nodes 8535 nps 8555 pv g1f3
-info depth 6 score cp 0 time 2206 nodes 26798 nps 16908 pv g1f3
-info depth 7 score cp 30 time 8725 nodes 157618 nps 22338 pv e2e4
-info depth 7 score cp 30 time 15000 nodes 163663 nps 23905 pv e2e4
+info depth 1 score cp 58 time 18 nodes 21 nps 1143 pv g1f3
+info depth 2 score cp 0 time 22 nodes 60 nps 5459 pv g1f3
+info depth 3 score cp 58 time 41 nodes 524 nps 16712 pv g1f3
+info depth 4 score cp 0 time 145 nodes 1313 nps 19861 pv g1f3
+info depth 5 score cp 41 time 435 nodes 8530 nps 26176 pv g1f3
+info depth 6 score cp 0 time 1409 nodes 26691 nps 27030 pv g1f3
+info depth 7 score cp 30 time 7516 nodes 156762 nps 25925 pv e2e4
+info depth 8 score cp 0 time 20090 nodes 358648 nps 27551 pv e2e4
+info depth 8 score cp 0 time 25000 nodes 154943 nps 28338 pv e2e4
 bestmove e2e4
 '''

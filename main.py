@@ -54,14 +54,14 @@ def main():
     compile_thread.start()
     compiling = True
 
-    f = open('/Users/alexandertian/Documents/PycharmProjects/AntaresChess/AntaresV3/debug_file.txt', 'w')
+    # f = open('/Users/alexandertian/Documents/PycharmProjects/AntaresChess/AntaresV3/debug_file.txt', 'w')
 
     while True:
         msg = input().strip()
         print(f">>> {msg}", file=sys.stderr)
 
-        f.write(f">>> {msg}")
-        f.write("\n")
+        # f.write(f">>> {msg}")
+        # f.write("\n")
 
         tokens = msg.split()
 
@@ -71,18 +71,18 @@ def main():
         elif msg == "uci" or msg.startswith("uciok"):
             print("id name AntaresPy")
 
-            f.write("< id name AntaresPy")
-            f.write("\n")
+            # f.write("< id name AntaresPy")
+            # f.write("\n")
 
             print("id author Alexander_Tian")
 
-            f.write("< id author Alexander_Tian")
-            f.write("\n")
+            # f.write("< id author Alexander_Tian")
+            # f.write("\n")
 
             print("uciok")
 
-            f.write("< uciok")
-            f.write("\n")
+            # f.write("< uciok")
+            # f.write("\n")
 
             continue
 
@@ -151,7 +151,7 @@ def main():
             print(f"bestmove {antares.notation_to_uci_move(move, promotion_flag, turn)}")
             continue
 
-    f.close()
+    # f.close()
     sys.exit()
 
 
