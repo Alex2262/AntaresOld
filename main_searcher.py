@@ -324,14 +324,14 @@ class Search:
 
 
 '''
-info depth 1 score cp 58 time 18 nodes 21 nps 1143 pv g1f3
-info depth 2 score cp 0 time 22 nodes 60 nps 5459 pv g1f3
-info depth 3 score cp 58 time 41 nodes 524 nps 16712 pv g1f3
-info depth 4 score cp 0 time 145 nodes 1313 nps 19861 pv g1f3
-info depth 5 score cp 41 time 435 nodes 8530 nps 26176 pv g1f3
-info depth 6 score cp 0 time 1409 nodes 26691 nps 27030 pv g1f3
-info depth 7 score cp 30 time 7516 nodes 156762 nps 25925 pv e2e4
-info depth 8 score cp 0 time 20090 nodes 358648 nps 27551 pv e2e4
-info depth 8 score cp 0 time 25000 nodes 154943 nps 28338 pv e2e4
+info depth 1 score cp 60 time 22 nodes 21 nps 929 pv g1f3
+info depth 2 score cp 0 time 27 nodes 60 nps 4500 pv g1f3
+info depth 3 score cp 60 time 53 nodes 524 nps 12968 pv g1f3
+info depth 4 score cp 0 time 179 nodes 1309 nps 16032 pv g1f3
+info depth 5 score cp 41 time 486 nodes 8521 nps 23414 pv g1f3
+info depth 6 score cp 0 time 1427 nodes 26592 nps 26609 pv g1f3
+info depth 7 score cp 31 time 6888 nodes 158928 nps 28586 pv e2e4
+info depth 8 score cp 0 time 19511 nodes 365099 nps 28804 pv e2e4
+info depth 8 score cp 0 time 25001 nodes 153369 nps 28613 pv e2e4
 bestmove e2e4
 '''
