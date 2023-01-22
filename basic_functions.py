@@ -408,7 +408,7 @@ def heuristic(board):
             opp_mid_score += OPP_PST[piece-6][correspond_pos]
             opp_end_score += OPP_ENDGAME_PST[piece-6][correspond_pos]
 
-    if own_mid_score + opp_mid_score > 2600:  # opening or middle game
+    if own_mid_piece_vals + opp_mid_piece_vals > 2600:  # opening or middle game
         own_score = own_mid_score + own_mid_piece_vals
         opp_score = opp_mid_score + opp_mid_piece_vals
     else:  # end game
