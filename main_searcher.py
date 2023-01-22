@@ -194,7 +194,7 @@ class Search:
 
     def negamax(self, board, alpha, beta, depth, castle, opp_castle, ep):
 
-        if depth == 0:
+        if depth <= 0:
             return -1, -1, self.qsearch(board, alpha, beta, self.max_qdepth)
 
         if timeit.default_timer() - self.start_time >= self.max_time and self.curr_depth >= self.min_stop_depth:
@@ -222,22 +222,33 @@ class Search:
                 if entry[1] == 2 and score >= beta:
                     return tt_move[0], tt_move[1], score
 
+        pv_node = alpha != beta - 1
+
+        # Find the king position and determine if it's in check
         k_pos = 0
         for pos, piece in enumerate(board):
             if piece == 5:  # if piece is king
                 k_pos = pos
         in_check_bool = in_check(board, k_pos)
 
+        # In check extensions
         if in_check_bool:
             depth += 1
 
-        moves = get_ordered_pseudo_legal_moves(board, castle, ep)
+        # Null Move Pruning
+        if depth >= 3 and not in_check_bool and not pv_node:
+            reduction = (depth + 2)//5 + 1
 
-        # Order tt_move to the front
-        for i, move in enumerate(moves):
-            if tt_move[0] == move[0] and tt_move[1] == move[1]:
-                moves.insert(i, moves.pop(i))
-                break
+            board = rotate(board)
+
+            returned = self.negamax(board, -beta, -beta + 1, depth - 1 - reduction, opp_castle, castle, -1)
+
+            board = rotate(board)
+
+            if -returned[2] >= beta:
+                return -1, -1, beta
+
+        moves = get_ordered_pseudo_legal_moves(board, castle, ep, tt_move)
 
         best_move = moves[0]
         best_score = -1000000
@@ -257,16 +268,33 @@ class Search:
                 undo_move(board, selected_piece, old_pos, new_pos, occupied_square, ep)
                 continue
 
-            legal_moves += 1
-
             board = rotate(board)
 
-            returned = self.negamax(board, -beta, -alpha, depth - 1, opp_castle, castle, values)
+            reduction = 0
+
+            if legal_moves == 0:
+                returned = self.negamax(board, -beta, -alpha, depth - 1, opp_castle, castle, values)
+            else:
+                # LMR
+                if depth > 3 and legal_moves > 5 and not in_check_bool and board[move[1]] > 11:
+                    reduction += 1
+                    if legal_moves > 11:
+                        reduction += legal_moves // 12
+
+                returned = self.negamax(board, -alpha - 1, -alpha, depth - 1 - reduction, opp_castle, castle, values)
+
+                if reduction and -returned[2] > alpha:
+                    returned = self.negamax(board, -alpha - 1, -alpha, depth - 1, opp_castle, castle, values)
+
+                if -returned[2] > alpha:
+                    returned = self.negamax(board, -beta, -alpha, depth - 1, opp_castle, castle, values)
 
             board = rotate(board)
             undo_move(board, selected_piece, old_pos, new_pos, occupied_square, ep)
             if returned[0] == -2:
                 return -2, -2, 0
+
+            legal_moves += 1
 
             return_eval = -returned[2]
             if return_eval > best_score:
@@ -359,4 +387,16 @@ info depth 7 score cp 30 time 5773 nodes 501966 nps 95501 pv e2e4
 info depth 8 score cp 0 time 13360 nodes 585965 nps 85123 pv g1f3
 info depth 8 score cp 0 time 15000 nodes 130462 nps 84517 pv g1f3
 bestmove g1f3
+
+info depth 1 score cp 58 time 44 nodes 21 nps 472 pv b1c3
+info depth 2 score cp 0 time 62 nodes 60 nps 1936 pv b1c3
+info depth 3 score cp 58 time 70 nodes 524 nps 9692 pv b1c3
+info depth 4 score cp 0 time 117 nodes 1367 nps 23458 pv g1f3
+info depth 5 score cp 41 time 164 nodes 5602 nps 50855 pv g1f3
+info depth 6 score cp 0 time 308 nodes 13122 nps 69684 pv g1f3
+info depth 7 score cp 30 time 1348 nodes 120079 nps 104960 pv e2e4
+info depth 8 score cp 0 time 3659 nodes 202909 nps 94133 pv e2e4
+info depth 9 score cp 26 time 11421 nodes 938983 nps 112367 pv e2e4
+info depth 9 score cp 26 time 15000 nodes 433512 nps 114462 pv e2e4
+bestmove e2e4
 '''

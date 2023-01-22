@@ -327,11 +327,16 @@ def in_check(board, pos):
 
 
 @nb.njit(fastmath=True, cache=True)
-def get_ordered_pseudo_legal_moves(board, castle, ep):
+def get_ordered_pseudo_legal_moves(board, castle, ep, tt_move):
     moves = get_pseudo_legal_moves(board, castle, ep)
     move_scores = np.zeros(len(moves))
     pawn_attack_map = get_pawn_attack_map(board)
     for i, move in enumerate(moves):
+
+        if tt_move[0] == move[0] and tt_move[1] == move[1]:
+            move_scores[i] += 100000
+            continue
+
         selected_piece = board[move[0]]
         occupied = board[move[1]]
         if occupied < 12:
@@ -341,6 +346,7 @@ def get_ordered_pseudo_legal_moves(board, castle, ep):
                 move_scores[i] -= 8 * PIECE_VALUES[selected_piece]
         elif move[1] in pawn_attack_map:
             move_scores[i] += 5 * (PIECE_VALUES[0] - PIECE_VALUES[selected_piece])
+
         new_correspond_pos = (move[1]-21)//10*8 + (move[1]-21) % 10
         old_correspond_pos = (move[0]-21)//10*8 + (move[1]-21) % 10
         move_scores[i] += 6 * (PST[selected_piece][new_correspond_pos] - PST[selected_piece][old_correspond_pos])
