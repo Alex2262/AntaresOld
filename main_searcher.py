@@ -388,15 +388,15 @@ info depth 8 score cp 0 time 13360 nodes 585965 nps 85123 pv g1f3
 info depth 8 score cp 0 time 15000 nodes 130462 nps 84517 pv g1f3
 bestmove g1f3
 
-info depth 1 score cp 58 time 44 nodes 21 nps 472 pv b1c3
-info depth 2 score cp 0 time 62 nodes 60 nps 1936 pv b1c3
-info depth 3 score cp 58 time 70 nodes 524 nps 9692 pv b1c3
-info depth 4 score cp 0 time 117 nodes 1367 nps 23458 pv g1f3
-info depth 5 score cp 41 time 164 nodes 5602 nps 50855 pv g1f3
-info depth 6 score cp 0 time 308 nodes 13122 nps 69684 pv g1f3
-info depth 7 score cp 30 time 1348 nodes 120079 nps 104960 pv e2e4
-info depth 8 score cp 0 time 3659 nodes 202909 nps 94133 pv e2e4
-info depth 9 score cp 26 time 11421 nodes 938983 nps 112367 pv e2e4
-info depth 9 score cp 26 time 15000 nodes 433512 nps 114462 pv e2e4
+info depth 1 score cp 58 time 45 nodes 21 nps 462 pv b1c3
+info depth 2 score cp 0 time 64 nodes 60 nps 1905 pv b1c3
+info depth 3 score cp 58 time 72 nodes 524 nps 9547 pv b1c3
+info depth 4 score cp 0 time 118 nodes 1352 nps 23102 pv g1f3
+info depth 5 score cp 41 time 165 nodes 5601 nps 50268 pv g1f3
+info depth 6 score cp 0 time 306 nodes 12777 nps 68951 pv g1f3
+info depth 7 score cp 30 time 1334 nodes 118760 nps 104786 pv e2e4
+info depth 8 score cp 0 time 3391 nodes 186741 nps 96296 pv e2e4
+info depth 9 score cp 26 time 11223 nodes 938969 nps 112763 pv e2e4
+info depth 9 score cp 26 time 15000 nodes 449279 nps 114323 pv e2e4
 bestmove e2e4
 '''
