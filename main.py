@@ -156,11 +156,6 @@ def main():
 
 
 def compile_stuff(bot, res):
-    test_board = copy.deepcopy(res[0])
-
-    for i in range(1):
-        bot.compile_functions(test_board)
-
     bot.start_fixed_engine(res[0], res[1], res[2], res[3], res[4], {}, 1000000, -1000000, 2)
 
 
