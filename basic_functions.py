@@ -39,7 +39,7 @@ PST = np.array([
             -5,   0,   0,   0,   0,   0,   0,  -5,
             -5,   0,   0,   0,   0,   0,   0,  -5,
             -5,   0,   5,   6,   6,   5,   0,  -5,
-             0,   5,  10,  18,  18,  10,   5,   0],
+            -5,   5,  10,  18,  18,  10,   5,  -5],
         [  -20, -10, -10,  -5,  -5, -10, -10, -20,
            -10,   0,   0,   0,   0,   0,   0, -10,
            -10,   0,   5,   5,   5,   5,   0, -10,
@@ -384,39 +384,43 @@ def test_for_win(board, move_amt):
 
 @nb.njit(fastmath=True, cache=True)  # without fastmath nps decrease. with fastmath maybe 1 nps boost
 def heuristic(board):
-    self_score = 0
-    opp_score = 0
-    piece_vals = 0
 
-    for pos, piece in enumerate(board):
+    own_mid_score = 0
+    opp_mid_score = 0
+
+    own_end_score = 0
+    opp_end_score = 0
+
+    own_mid_piece_vals = 0
+    opp_mid_piece_vals = 0
+
+    for pos in range(21, 99):
+        piece = board[pos]
+        correspond_pos = (pos - 21) // 10 * 8 + (pos - 21) % 10
         if piece < 6:
-            piece_vals += PIECE_VALUES[piece]
+            own_mid_piece_vals += PIECE_VALUES[piece]
+
+            own_mid_score += PST[piece][correspond_pos]
+            own_end_score += ENDGAME_PST[piece][correspond_pos]
         elif piece < 12:
-            piece_vals += PIECE_VALUES[piece-6]
-    if piece_vals > 2600:  # opening or middle game
-        for pos, piece in enumerate(board):
-            correspond_pos = (pos-21)//10*8 + (pos-21) % 10
-            if piece < 6:  # own piece
-                self_score += PIECE_VALUES[piece]
-                self_score += PST[piece][correspond_pos]
-            elif piece < 12:  # opponent's piece
-                opp_score += PIECE_VALUES[piece-6]
-                opp_score += OPP_PST[piece-6][correspond_pos]
+            opp_mid_piece_vals += PIECE_VALUES[piece-6]
+
+            opp_mid_score += OPP_PST[piece-6][correspond_pos]
+            opp_end_score += OPP_ENDGAME_PST[piece-6][correspond_pos]
+
+    if own_mid_score + opp_mid_score > 2600:  # opening or middle game
+        own_score = own_mid_score + own_mid_piece_vals
+        opp_score = opp_mid_score + opp_mid_piece_vals
     else:  # end game
-        for pos, piece in enumerate(board):
-            correspond_pos = (pos-21)//10*8 + (pos-21) % 10
-            if piece < 6:  # own piece
-                self_score += PIECE_VALUES[piece]
-                self_score += ENDGAME_PST[piece][correspond_pos]
-            elif piece < 12:  # opponent's piece
-                opp_score += PIECE_VALUES[piece-6]
-                opp_score += OPP_ENDGAME_PST[piece-6][correspond_pos]
-    return self_score-opp_score
+        own_score = own_end_score + own_mid_piece_vals
+        opp_score = opp_end_score + opp_mid_piece_vals
+
+    return own_score-opp_score
 
 
 @nb.njit(cache=True)  # maybe a 1-5 nps boost with numba
 def rotate(board):
-    for i in range(120):
+    for i in range(21, 99):
         if board[i] < 6:  # own piece
             board[i] += 6
         elif board[i] < 12:  # opponent's piece
