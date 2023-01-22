@@ -348,4 +348,14 @@ info depth 6 score cp 0 time 2206 nodes 26798 nps 16908 pv g1f3
 info depth 7 score cp 30 time 8725 nodes 157618 nps 22338 pv e2e4
 info depth 7 score cp 30 time 15000 nodes 163663 nps 23905 pv e2e4
 bestmove e2e4
+
+info depth 1 score cp 60 time 19 nodes 21 nps 1099 pv g1f3
+info depth 2 score cp 0 time 31 nodes 60 nps 3871 pv g1f3
+info depth 3 score cp 60 time 38 nodes 524 nps 18101 pv g1f3
+info depth 4 score cp 0 time 105 nodes 1488 nps 30631 pv g1f3
+info depth 5 score cp 41 time 236 nodes 13353 nps 70236 pv g1f3
+info depth 6 score cp 0 time 749 nodes 32530 nps 65534 pv g1f3
+info depth 7 score cp 31 time 5842 nodes 503175 nps 94528 pv e2e4
+info depth 7 score cp 31 time 7500 nodes 154246 nps 94204 pv e2e4
+bestmove e2e4
 '''
