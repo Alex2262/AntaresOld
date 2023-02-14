@@ -1,5 +1,6 @@
 
 import numpy as np
+from basic_functions import rotate
 
 
 def parse_fen(fen_string):
@@ -72,7 +73,8 @@ def parse_fen(fen_string):
     else:
         ep = -1
 
+    np_board = np.array(new_board)
     if turn == "b":
-        return np.array(new_board[::-1]), turn, w_castle, b_castle, ep
-    return np.array(new_board), turn, w_castle, b_castle, ep
+        return rotate(np_board), turn, w_castle, b_castle, ep
+    return np_board, turn, w_castle, b_castle, ep
 

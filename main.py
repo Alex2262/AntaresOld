@@ -111,7 +111,6 @@ def main():
                 fen = " ".join(tokens[2:8])
                 results = parse_fen(fen)
                 next_idx = 8
-
             else:
                 continue
 

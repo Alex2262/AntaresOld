@@ -237,7 +237,7 @@ class Search:
 
         # Null Move Pruning
         if depth >= 3 and not in_check_bool and not pv_node:
-            reduction = (depth + 2)//5 + 1
+            reduction = (depth + 2) // 5 + 1
 
             board = rotate(board)
 
