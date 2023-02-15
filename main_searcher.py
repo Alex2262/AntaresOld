@@ -316,14 +316,14 @@ class Search:
 
         index = hash_code % MAX_HASH_SIZE
 
-        if self.TRANSPOSITION_TABLE[index][0] != hash_code or \
+        '''if self.TRANSPOSITION_TABLE[index][0] != hash_code or \
                 depth > self.TRANSPOSITION_TABLE[index][5] or tt_flag == 1:
             self.TRANSPOSITION_TABLE[index][0] = hash_code
             self.TRANSPOSITION_TABLE[index][1] = best_score
             self.TRANSPOSITION_TABLE[index][2] = tt_flag
             self.TRANSPOSITION_TABLE[index][3] = best_move[0]
             self.TRANSPOSITION_TABLE[index][4] = best_move[1]
-            self.TRANSPOSITION_TABLE[index][5] = depth
+            self.TRANSPOSITION_TABLE[index][5] = depth'''
 
         return best_move[0], best_move[1], best_score
 
@@ -398,5 +398,16 @@ info depth 7 score cp 30 time 1334 nodes 118760 nps 104786 pv e2e4
 info depth 8 score cp 0 time 3391 nodes 186741 nps 96296 pv e2e4
 info depth 9 score cp 26 time 11223 nodes 938969 nps 112763 pv e2e4
 info depth 9 score cp 26 time 15000 nodes 449279 nps 114323 pv e2e4
+bestmove e2e4
+
+info depth 1 score cp 58 time 49 nodes 21 nps 427 pv b1c3
+info depth 2 score cp 0 time 66 nodes 60 nps 1821 pv b1c3
+info depth 3 score cp 58 time 74 nodes 524 nps 9208 pv b1c3
+info depth 4 score cp 0 time 120 nodes 1352 nps 22691 pv g1f3
+info depth 5 score cp 41 time 168 nodes 5601 nps 49574 pv g1f3
+info depth 6 score cp 0 time 309 nodes 12778 nps 68322 pv g1f3
+info depth 7 score cp 30 time 1355 nodes 118787 nps 103214 pv e2e4
+info depth 8 score cp 0 time 3509 nodes 186794 nps 93104 pv e2e4
+info depth 8 score cp 0 time 5000 nodes 177342 nps 100807 pv e2e4
 bestmove e2e4
 '''

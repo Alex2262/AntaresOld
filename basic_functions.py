@@ -108,6 +108,23 @@ ENDGAME_PST = np.array([
            -20, -20, -20, -20, -20, -20, -20, -20],
 ])
 
+OPP_PST = np.array([
+    PST[0][::-1],
+    PST[1][::-1],
+    PST[2][::-1],
+    PST[3][::-1],
+    PST[4][::-1],
+    PST[5][::-1]
+])
+
+OPP_ENDGAME_PST = np.array([
+    ENDGAME_PST[0][::-1],
+    ENDGAME_PST[1][::-1],
+    ENDGAME_PST[2][::-1],
+    ENDGAME_PST[3][::-1],
+    ENDGAME_PST[4][::-1],
+    ENDGAME_PST[5][::-1]
+])
 
 A1, H1, A8, H8 = 91, 98, 21, 28
 
@@ -393,8 +410,8 @@ def heuristic(board):
         elif piece < 12:
             opp_mid_piece_vals += PIECE_VALUES[piece-6]
 
-            opp_mid_score += PST[piece-6][correspond_pos ^ 56]
-            opp_end_score += ENDGAME_PST[piece-6][correspond_pos ^ 56]
+            opp_mid_score += OPP_PST[piece-6][correspond_pos]
+            opp_end_score += OPP_ENDGAME_PST[piece-6][correspond_pos]
 
     if own_mid_piece_vals + opp_mid_piece_vals > 2600:  # opening or middle game
         own_score = own_mid_score + own_mid_piece_vals
